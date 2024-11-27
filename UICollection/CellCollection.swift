@@ -51,13 +51,13 @@ class CellCollection: UICollectionViewCell {
             titleLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -10)
         ])
     }
-    
+    /* since i am using programtically and i dont want to instantiate from view or viewcontroller from storyboard. It is called when a view or view controller is loaded from a storyboard or nib file.*/
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     func configure(with title: String, imageName: String) {
         titleLabel.text = title
-        imageView.image = UIImage(systemName: imageName) // Use system images or your custom assets
+        imageView.image = UIImage(systemName: imageName)
     }
 }

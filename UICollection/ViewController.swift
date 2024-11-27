@@ -1,6 +1,8 @@
 import UIKit
 
 class ViewController: UIViewController {
+    let usernameTextField = UITextField()
+    let passwordTextField = UITextField()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,20 +25,32 @@ class ViewController: UIViewController {
         )
         view.addSubview(titleLabel)
 
-        let facebookButton = createTransparentButton(title: "Continue with Facebook", iconName: "download")
+        // Configure and add usernameTextField
+        usernameTextField.placeholder = "Enter your username/email"
+        usernameTextField.borderStyle = .roundedRect
+        usernameTextField.font = UIFont.systemFont(ofSize: 16)
+        usernameTextField.translatesAutoresizingMaskIntoConstraints = false
+        usernameTextField.delegate = self
+        view.addSubview(usernameTextField)
+
+        // Configure and add passwordTextField
+        passwordTextField.placeholder = "Enter your password"
+        passwordTextField.isSecureTextEntry = true
+        passwordTextField.borderStyle = .roundedRect
+        passwordTextField.font = UIFont.systemFont(ofSize: 16)
+        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
+        passwordTextField.delegate = self
+        view.addSubview(passwordTextField)
+
         let googleButton = createTransparentButton(title: "Continue with Google", iconName: "google")
         let appleButton = createTransparentButton(title: "Continue with Apple", iconName: "apple")
-        let emailButton = createTransparentButton(title: "Continue with Email", iconName: "email")
-        //let emailButton1 = createTransparentButton(title: "Continue with Email", iconName: "email")
 
-
-        let stackView = UIStackView(arrangedSubviews: [facebookButton, googleButton, appleButton, emailButton])
+        let stackView = UIStackView(arrangedSubviews: [googleButton, appleButton])
         stackView.axis = .vertical
         stackView.spacing = 15
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
 
-        // Create Account Label
         let createAccountLabel = createLabel(
             text: "Don’t have an account? Create one",
             font: UIFont.systemFont(ofSize: 14, weight: .medium),
@@ -45,7 +59,6 @@ class ViewController: UIViewController {
         )
         view.addSubview(createAccountLabel)
 
-        // Footer Label
         let footerLabel = createLabel(
             text: "By logging in I agree to the Terms and Conditions and Privacy Policy",
             font: UIFont.systemFont(ofSize: 12, weight: .regular),
@@ -66,7 +79,17 @@ class ViewController: UIViewController {
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
 
-            stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
+            usernameTextField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+            usernameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            usernameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            usernameTextField.heightAnchor.constraint(equalToConstant: 50),
+
+            passwordTextField.topAnchor.constraint(equalTo: usernameTextField.bottomAnchor, constant: 15),
+            passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            passwordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            passwordTextField.heightAnchor.constraint(equalToConstant: 50),
+
+            stackView.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 30),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
 
@@ -91,7 +114,7 @@ class ViewController: UIViewController {
         let iconImageView = UIImageView(image: UIImage(named: iconName))
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
-        iconImageView.widthAnchor.constraint(equalToConstant: 24).isActive = true // Fixed size for icon
+        iconImageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
         iconImageView.heightAnchor.constraint(equalToConstant: 24).isActive = true
 
         let titleLabel = createLabel(
@@ -117,6 +140,7 @@ class ViewController: UIViewController {
 
         return button
     }
+
     private func createLabel(text: String, font: UIFont, textColor: UIColor, textAlignment: NSTextAlignment) -> UILabel {
         let label = UILabel()
         label.text = text
@@ -126,5 +150,105 @@ class ViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }
-
 }
+
+extension ViewController: UITextFieldDelegate {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        return true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.backgroundColor = .lightGray
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.backgroundColor = .white
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == usernameTextField {
+            passwordTextField.becomeFirstResponder()
+        } else if textField == passwordTextField {
+            validateAndNavigate()
+        }
+        return true
+    }
+    
+    func validateAndNavigate() {
+        guard let user = usernameTextField.text, !user.isEmpty else {
+            showAlert(message:"username can not be empty")
+            return
+        }
+        guard let pass = passwordTextField.text, !pass.isEmpty else {
+            showAlert(message:"password can not be empty")
+            return
+        }
+        
+        if user == "Murali" && pass == "Kakanuru8106" {
+            navigatetonext()
+        } else {
+            showAlert(message:"Invalid Username / password")
+        }
+    }
+    
+    func navigatetonext() {
+        guard let storyboard = storyboard,
+              let nextVC = storyboard.instantiateViewController(withIdentifier: "tabbarC") as? tabbarC else {
+            print("Failed to instantiate next view controller")
+            return
+        }
+        
+        navigationController?.pushViewController(nextVC, animated: true)
+    }
+    func showAlert(message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
+        
+        func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+            // Combine the current text with the new text
+            let currentText = textField.text ?? ""
+            guard let stringRange = Range(range, in: currentText) else { return false }
+            let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+            
+            // Email validation
+            if textField == usernameTextField {
+                if !isValidEmail(updatedText) && !updatedText.isEmpty {
+                    textField.layer.borderColor = UIColor.red.cgColor
+                    textField.layer.borderWidth = 1.0
+                } else {
+                    textField.layer.borderColor = UIColor.clear.cgColor
+                    textField.layer.borderWidth = 0
+                }
+            }
+            
+            // Password validation
+            if textField == passwordTextField {
+                if !isValidPassword(updatedText) && !updatedText.isEmpty {
+                    textField.layer.borderColor = UIColor.red.cgColor
+                    textField.layer.borderWidth = 1.0
+                } else {
+                    textField.layer.borderColor = UIColor.clear.cgColor
+                    textField.layer.borderWidth = 0
+                }
+            }
+            // Reuse the existing validation functions
+            func isValidEmail(_ email: String) -> Bool {
+                let emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+                let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+                return emailPredicate.evaluate(with: email)
+            }
+            
+            func isValidPassword(_ password: String) -> Bool {
+                let passwordRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$"
+                let passwordPredicate = NSPredicate(format: "SELF MATCHES %@", passwordRegex)
+                return passwordPredicate.evaluate(with: password)
+            }
+            
+            return true
+        }
+        
+    }
+    

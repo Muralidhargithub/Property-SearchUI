@@ -4,7 +4,7 @@ class VerifiedUserCardCell: UICollectionViewCell {
     static let identifier = "VerifiedUserCardCell"
     
     // Subviews
-    private let cardView: UIView = {
+    let cardView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.1)
         view.layer.cornerRadius = 12
@@ -13,7 +13,7 @@ class VerifiedUserCardCell: UICollectionViewCell {
         return view
     }()
     
-    private let badgeImageView: UIImageView = {
+    let badgeImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.tintColor = UIColor.systemBlue
         imageView.contentMode = .scaleAspectFit
@@ -21,7 +21,7 @@ class VerifiedUserCardCell: UICollectionViewCell {
         return imageView
     }()
     
-    private let titleLabel: UILabel = {
+   let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         label.textColor = UIColor.black
@@ -30,25 +30,25 @@ class VerifiedUserCardCell: UICollectionViewCell {
         return label
     }()
     
-    private let subtitleLabel: UILabel = {
+  let subtitleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         label.textColor = UIColor.darkGray
-        label.numberOfLines = 0 // Allow multi-line text
+        label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private let buttonLabel: UILabel = {
+  let buttonLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
         label.textColor = UIColor.systemBlue
-        label.isUserInteractionEnabled = true // Enable interaction for taps
+        label.isUserInteractionEnabled = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    // Initializer
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupCard()
@@ -58,18 +58,14 @@ class VerifiedUserCardCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // Setup Card UI
-    private func setupCard() {
-        // Add card view to content view
+    func setupCard() {
         contentView.addSubview(cardView)
         
-        // Add subviews to card view
         cardView.addSubview(badgeImageView)
         cardView.addSubview(titleLabel)
         cardView.addSubview(subtitleLabel)
         cardView.addSubview(buttonLabel)
         
-        // Layout constraints
         NSLayoutConstraint.activate([
             cardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
             cardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),

@@ -6,8 +6,8 @@ class CollectionVC: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.itemSize = CGSize(width: 100, height: 100)
-        layout.minimumLineSpacing = 20 // rows
-        layout.minimumInteritemSpacing = 10 // items
+        layout.minimumLineSpacing = 20
+        layout.minimumInteritemSpacing = 10
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
         return collectionView
@@ -21,7 +21,6 @@ class CollectionVC: UIViewController {
         return searchBar
     }()
     
-    // Add a placeholder for the verified user card
     let collectionItems: [(String?, String?)] = [
         ("Property for Rent", "house"),
         ("Property for Sale", "building.2"),
@@ -33,7 +32,8 @@ class CollectionVC: UIViewController {
         ("Furniture & Garden", "sofa"),
         ("Community", "person.2"),
         (nil, nil),
-        (nil, "horizontalScroll")// Placeholder for Verified User Card
+        (nil, "horizontalScroll")
+        
     ]
     
     override func viewDidLoad() {
@@ -80,7 +80,6 @@ extension CollectionVC: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        // Verified User Card Cell
         if indexPath.row == collectionItems.count - 2 {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: VerifiedUserCardCell.identifier, for: indexPath) as? VerifiedUserCardCell else {
                 return UICollectionViewCell()
@@ -94,16 +93,14 @@ extension CollectionVC: UICollectionViewDataSource {
             return cell
         }
         
-        // Horizontal Scroll Cell
         if collectionItems[indexPath.row].1 == "horizontalScroll" {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HorizontalScrollCell.identifier, for: indexPath) as? HorizontalScrollCell else {
                 return UICollectionViewCell()
             }
-            cell.configure(with: ["house1", "house2", "house3", "house4", "house5"]) // Replace with your image names
+            cell.configure(with: ["house1", "house2", "house3", "house4", "house5"])
             return cell
         }
         
-        // Regular Cells
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellCollection.identifier, for: indexPath) as? CellCollection else {
             return UICollectionViewCell()
         }
@@ -117,13 +114,10 @@ extension CollectionVC: UICollectionViewDataSource {
 extension CollectionVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if indexPath.row == collectionItems.count - 1 {
-            // Larger size for Verified User Card
             return CGSize(width: collectionView.frame.width , height: 150)
         }else if indexPath.row == collectionItems.count - 2 {
-            // Larger size for Verified User Card
             return CGSize(width: collectionView.frame.width , height: 150)
         } else {
-            // Default size for other items
             return CGSize(width: 100, height: 100)
         }
     }
